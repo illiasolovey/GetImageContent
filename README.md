@@ -14,9 +14,11 @@ The following function is a part of [serverless-object-recognition](https://gith
 
 ### Getting started from the command line
 
-1. Clone this repository:
-    ```
+1. Clone repository and restore necessary dependencies:
+    ```dotnetcli
     git clone https://github.com/illiasolovey/ObjectAnalysis.git
+    cd ObjectAnalysis
+    dotnet restore
     ```
 
 1. Install Amazon.Lambda.Tools Global Tools if not already installed.
@@ -41,17 +43,19 @@ The following function is a part of [serverless-object-recognition](https://gith
             "function-role": "{IAM role for your function}",
             "function-memory-size": 256,
             "function-timeout": 30,
-            "function-handler": "ObjectAnalysis::ObjectAnalysis.Function::FunctionHandler"
+            "function-handler": "ObjectAnalysis::ObjectAnalysis.Startup::FunctionHandler"
         }
         ```
-        Function logic code is stored inside "ObjectAnalysis::ObjectAnalysis.Function::FunctionHandler", you can change its location by changing `"function-handler"` property
-    - Configure S3 bucket in appsettings.json
+        Function logic code is stored inside "ObjectAnalysis::ObjectAnalysis.Startup::FunctionHandler", you can change its location by changing `"function-handler"` property
+    - Configure bucket and preferences in appsettings.json
 
         ```
         {
-            "StorageConfiguration": {
-                "GetBucket": {Bucket to get desired object},
-                "PutBucket": {Bucket to put updated object}
+            "FunctionConfiguration": {
+                "UploadBucketName": "",
+                "DownloadBucketName": "",
+                "UrlLifetimeInMin": "20",
+                "Confidence": 70
             }
         }
         ```
@@ -59,8 +63,11 @@ The following function is a part of [serverless-object-recognition](https://gith
 1.  Deploy function to AWS Lambda
 
     ```
-        dotnet lambda deploy-function ObjectAnalysis
+    dotnet lambda deploy-function ObjectAnalysis
     ```
     This command will generate new Lambda function on your account, provided that specified name is not already in use.
 
-1.  After successful deployment, access your AWS Lambda console and review your newly created function.
+1.  After successful deployment, access your AWS Lambda console and review your newly created function. Test it using dotnet tools:
+    ```
+    dotnet lambda invoke-function ObjectAnalysis --payload "{image-on-get-bucket}"
+    ```

@@ -11,10 +11,7 @@ namespace ObjectAnalysis.Services
         private string _objectKey = null!;
 
         public S3Service(IServiceConfiguration configuration)
-        {
-            _configuration = configuration;
-            _s3Client = new AmazonS3Client();
-        }
+            => (_configuration, _s3Client) = (configuration, new AmazonS3Client());
 
         public void SetObjectKey(string objectKey)
         {

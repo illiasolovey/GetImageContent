@@ -9,10 +9,7 @@ namespace ObjectAnalysis
         private readonly RekognitionService _rekognitionService;
 
         public Functions(S3Service s3Service, RekognitionService rekognitionService)
-        {
-            _s3Service = s3Service;
-            _rekognitionService = rekognitionService;
-        }
+            => (_s3Service, _rekognitionService) = (s3Service, rekognitionService);
 
         public async Task<string> ObjectAnalysis()
         {
@@ -24,8 +21,10 @@ namespace ObjectAnalysis
             using var memoryStream = new MemoryStream(objectStreamBytes);
             using var image = SixLabors.ImageSharp.Image.Load(memoryStream);
             Utils.BoundingBox.Draw(image, detectedLabels);
+
             using var outputObjectStream = new MemoryStream();
             image.Save(outputObjectStream, Utils.ImageFormat.GetObjectImageFormat(objectType));
+
             await _s3Service.PutObjectAsync(outputObjectStream);
             return _s3Service.GetPresignedUrl(expiresInMin: 20);
         }

@@ -31,6 +31,8 @@ namespace ObjectAnalysis
 
         public Task<string> FunctionHandler(LambdaPayload payload, ILambdaContext context)
         {
+            if (string.IsNullOrWhiteSpace(payload.ObjectKey))
+                throw new ArgumentException("ObjectKey is a required property and cannot be null or empty.");
             using (ServiceProvider serviceProvider = _serviceCollection.BuildServiceProvider())
             {
                 serviceProvider.GetService<ServiceConfiguration>();

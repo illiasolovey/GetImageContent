@@ -1,6 +1,7 @@
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ObjectAnalysis.Models;
 using ObjectAnalysis.Services;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -28,15 +29,15 @@ namespace ObjectAnalysis
             _serviceCollection.AddScoped<Functions>();
         }
 
-        public Task<string> FunctionHandler(string objectKey, ILambdaContext context)
+        public Task<string> FunctionHandler(LambdaPayload payload, ILambdaContext context)
         {
             using (ServiceProvider serviceProvider = _serviceCollection.BuildServiceProvider())
             {
-                var serviceConfiguration = serviceProvider.GetService<ServiceConfiguration>();
+                serviceProvider.GetService<ServiceConfiguration>();
                 var s3Service = serviceProvider.GetService<S3Service>();
-                s3Service!.SetObjectKey(objectKey);
-                var rekognitionService = serviceProvider.GetService<RekognitionService>();
-                return serviceProvider.GetService<Functions>()!.ObjectAnalysis();
+                s3Service!.SetObjectKey(payload.ObjectKey);
+                serviceProvider.GetService<RekognitionService>();
+                return serviceProvider.GetService<Functions>()!.ObjectAnalysis(payload.Confidence);
             }
         }
     }

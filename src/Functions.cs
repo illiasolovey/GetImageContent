@@ -11,11 +11,11 @@ namespace ObjectAnalysis
         public Functions(S3Service s3Service, RekognitionService rekognitionService)
             => (_s3Service, _rekognitionService) = (s3Service, rekognitionService);
 
-        public async Task<string> ObjectAnalysis()
+        public async Task<string> ObjectAnalysis(float confidence)
         {
             var objectStream = await _s3Service.GetObjectStreamAsync();
             var objectType = await _s3Service.GetObjectType();
-            var detectedLabels = await _rekognitionService.DetectLabels(objectStream);
+            var detectedLabels = await _rekognitionService.DetectLabels(objectStream, confidence);
 
             byte[] objectStreamBytes = objectStream.ToArray();
             using var memoryStream = new MemoryStream(objectStreamBytes);

@@ -10,19 +10,17 @@ namespace ObjectAnalysis.Services
         public ServiceConfiguration(IConfiguration configuration)
         {
             _configuration = configuration;
-            BucketGet = string.IsNullOrWhiteSpace(_configuration["FunctionConfiguration:UploadBucketName"])
+            BucketGet = string.IsNullOrWhiteSpace(_configuration["StorageConfiguration:UploadBucketName"])
                 ? throw new Exception(_nullDeserializationExceptionMessage)
-                : _configuration["FunctionConfiguration:UploadBucketName"];
-            BucketPut = string.IsNullOrWhiteSpace(_configuration["FunctionConfiguration:DownloadBucketName"])
+                : _configuration["StorageConfiguration:UploadBucketName"];
+            BucketPut = string.IsNullOrWhiteSpace(_configuration["StorageConfiguration:DownloadBucketName"])
                 ? throw new Exception(_nullDeserializationExceptionMessage)
-                : _configuration["FunctionConfiguration:DownloadBucketName"];
+                : _configuration["StorageConfiguration:DownloadBucketName"];
             UrlLifetimeInMin = _configuration.GetValue<int>("FunctionConfiguration:UrlLifetimeInMin");
-            Confidence = _configuration.GetValue<int>("FunctionConfiguration:Confidence");
         }
 
         public string BucketGet { get; set; }
         public string BucketPut { get; set; }
         public int UrlLifetimeInMin { get; set; }
-        public int Confidence { get; set; }
     }
 }

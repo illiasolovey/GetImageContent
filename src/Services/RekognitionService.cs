@@ -10,10 +10,9 @@ namespace ObjectAnalysis.Services
         public RekognitionService(IServiceConfiguration configuration) =>
             _configuration = configuration;
 
-        public async Task<DetectLabelsResponse> DetectLabels(MemoryStream objectStream)
+        public async Task<DetectLabelsResponse> DetectLabels(MemoryStream objectStream, float confidence)
         {
             string bucketName = _configuration.BucketGet;
-            float confidence = _configuration.Confidence;
             var rekognitionClient = new AmazonRekognitionClient();
             var response = await rekognitionClient.DetectLabelsAsync(
                 request: new DetectLabelsRequest

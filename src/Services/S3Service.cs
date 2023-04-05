@@ -16,7 +16,8 @@ namespace ObjectAnalysis.Services
         public void SetObjectKey(string objectKey)
         {
             _objectKey = objectKey;
-            _sharedObjectRequest = new GetObjectRequest {
+            _sharedObjectRequest = new GetObjectRequest
+            {
                 BucketName = _configuration.BucketGet,
                 Key = _objectKey
             };

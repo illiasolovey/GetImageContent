@@ -11,7 +11,7 @@ namespace ObjectAnalysis
         public Functions(S3Service s3Service, RekognitionService rekognitionService)
             => (_s3Service, _rekognitionService) = (s3Service, rekognitionService);
 
-        public async Task<string> ObjectAnalysis(float confidence)
+        public async Task<string> ObjectAnalysis(float confidence, string boundingBoxColor, string labelColor)
         {
             var objectStream = await _s3Service.GetObjectStreamAsync();
             var objectType = await _s3Service.GetObjectType();
@@ -20,7 +20,7 @@ namespace ObjectAnalysis
             byte[] objectStreamBytes = objectStream.ToArray();
             using var memoryStream = new MemoryStream(objectStreamBytes);
             using var image = SixLabors.ImageSharp.Image.Load(memoryStream);
-            Utils.BoundingBox.Draw(image, detectedLabels);
+            Utils.BoundingBox.Draw(image, detectedLabels, boundingBoxColor, labelColor);
 
             using var outputObjectStream = new MemoryStream();
             image.Save(outputObjectStream, Utils.ImageFormat.GetObjectImageFormat(objectType));

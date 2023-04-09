@@ -1,8 +1,8 @@
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ObjectAnalysis.Models;
 using ObjectAnalysis.Services;
+using PupsearchShared.Models;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 namespace ObjectAnalysis
@@ -39,7 +39,7 @@ namespace ObjectAnalysis
                 var s3Service = serviceProvider.GetService<S3Service>();
                 s3Service!.SetObjectKey(payload.ObjectKey);
                 serviceProvider.GetService<RekognitionService>();
-                return serviceProvider.GetService<Functions>()!.ObjectAnalysis(payload.Confidence);
+                return serviceProvider.GetService<Functions>()!.ObjectAnalysis(payload.Confidence, payload.BoundingBoxColorHEX!, payload.LabelColorHEX!);
             }
         }
     }

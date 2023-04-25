@@ -1,7 +1,8 @@
 using Amazon.S3;
 using Amazon.S3.Model;
+using DetectifyLambdaServices.Services.Interfaces;
 
-namespace ObjectAnalysis.Services
+namespace DetectifyLambdaServices.Services
 {
     public class S3Service
     {
@@ -29,7 +30,8 @@ namespace ObjectAnalysis.Services
             using var objectMemoryStream = new MemoryStream();
             using (Stream responseStream = objectResponse.ResponseStream)
                 await responseStream.CopyToAsync(objectMemoryStream);
-            return objectMemoryStream;
+            objectMemoryStream.Seek(0, SeekOrigin.Begin);
+            return new MemoryStream(objectMemoryStream.ToArray());
         }
 
         public async Task<PutObjectResponse> PutObjectAsync(MemoryStream outputObjectStream)
@@ -49,7 +51,7 @@ namespace ObjectAnalysis.Services
             return objectResponse.Headers.ContentType;
         }
 
-        public string GetPresignedUrl(int expiresInMin)
+        public string GetPresignedUrl(int expiresInMin = 20)
         {
             string bucket = _configuration.BucketPut;
             DateTime expiration = DateTime.UtcNow.AddMinutes(_configuration.UrlLifetimeInMin);

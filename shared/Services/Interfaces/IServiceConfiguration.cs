@@ -1,4 +1,4 @@
-namespace ObjectAnalysis.Services
+namespace DetectifyLambdaServices.Services.Interfaces
 {
     public interface IServiceConfiguration
     {

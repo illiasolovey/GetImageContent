@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
+using DetectifyLambdaServices.Services.Interfaces;
 
-namespace ObjectAnalysis.Services
+namespace DetectifyLambdaServices.Services
 {
     public class ServiceConfiguration : IServiceConfiguration
     {

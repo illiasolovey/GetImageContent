@@ -1,6 +1,6 @@
 using SixLabors.ImageSharp.Formats;
 
-namespace ObjectAnalysis.Utils
+namespace DetectifyLambdaServices.Utils
 {
     public static class ImageFormat
     {
@@ -18,7 +18,7 @@ namespace ObjectAnalysis.Utils
                 case "image/bmp":
                     return SixLabors.ImageSharp.Formats.Bmp.BmpFormat.Instance;
                 default:
-                    throw new ArgumentException($"{contentType} is not supported.");
+                    throw new ArgumentException($"\"{contentType}\" is not supported.");
             }
         }
     }
